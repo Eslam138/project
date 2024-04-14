@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- إضافة مكتبة Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <title>زيادة الرقم في الدائرة</title>
+    <style>
+        /* تنسيق الحاوية الرئيسية */
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: url('hhh.jpg');
+        }
+        #icons-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 20px; /* لإضافة بعض المساحة حول الأيقونات */
+            box-sizing: border-box; /* لضمان بقاء الحاوية متناسبة */
+            position: absolute; /* لتحديد الحاوية بشكل صحيح في أعلى الصفحة */
+            top: 0; /* تحديد الموضع في أعلى الصفحة */
+        }
+
+        /* تنسيق الأيقونات */
+        .icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* تنسيق الدائرة العريضة */
+        #wide-circle {
+            width: 400px;
+            height: 50px;
+            border-radius: 25px;
+            border: 1px solid yellow;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        /* تنسيق الدائرة الصغيرة */
+        #small-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+            border: 6px solid yellow; /* إضافة إطار أسود رفيع حول الدائرة الصغيرة */
+            gap: 15px;
+
+        }
+        #counter{
+            
+            padding: 50px;
+
+        }
+
+        /* تنسيق الزر */
+        #increase-btn {
+            width: 400px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: lightgray;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+     <!-- حاوية الأيقونات -->
+     <div id="icons-container">
+        <!-- أيقونة الجرس على اليسار -->
+        <i class="fas fa-bell icon"></i>
+        <!-- أيقونة المستخدم على اليمين -->
+        <i class="fas fa-user icon"></i>
+    </div>
+    <div id="container">
+        <div id="wide-circle">
+            <div id="points">0</div>
+            
+        </div>
+        
+        <div id="small-circle">
+            <div id="counter-text">
+                <span id="counter"  gap: 15px;>0</span><br>
+                <span>الرصيد بالنقاط</span>
+            </div>
+        </div>
+
+        <button id="increase-btn">زيادة الرقم</button>
+    </div>
+
+    <script>
+        // الحصول على العناصر
+        const smallCircle = document.getElementById('small-circle');
+        const increaseBtn = document.getElementById('increase-btn');
+        const pointsDiv = document.getElementById('points');
+
+        // قائمة الألوان الممكنة
+        const colors = ['lightblue', 'lightgreen', 'lightcoral', 'lightgoldenrodyellow', 'lightsalmon'];
+
+        // الدالة لتغيير لون الدائرة الصغيرة بشكل دوري
+        function changeSmallCircleColor() {
+            // اختيار لون عشوائي
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            // تغيير لون الدائرة الصغيرة
+            smallCircle.style.backgroundColor = randomColor;
+        }
+
+        // الدالة لزيادة الرقم
+        function increaseNumber() {
+            // التحقق مما إذا كان قد مرت 24 ساعة منذ آخر زيادة
+            const lastIncreaseTime = localStorage.getItem('lastIncreaseTime');
+            const currentTime = new Date().getTime();
+            const oneDayInMs = 24 * 60 * 60 * 1000;
+
+            if (!lastIncreaseTime || (currentTime - lastIncreaseTime >= oneDayInMs)) {
+                // زيادة الرقم
+                let number = parseInt(smallCircle.textContent);
+                const randomIncrease = Math.floor(Math.random() * 201) + 100; // زيادة عشوائية بين 100 و300
+                number += randomIncrease;
+                smallCircle.textContent = number;
+
+                // إضافة نقطة في الدائرة العريضة
+                pointsDiv.textContent = parseInt(pointsDiv.textContent) + 1;
+
+                // تحديث وقت الزيادة الأخير
+                localStorage.setItem('lastIncreaseTime', currentTime);
+            } else {
+                alert('لا يمكنك زيادة الرقم إلا مرة واحدة كل 24 ساعة.');
+            }
+        }
+
+        // إضافة حدث عند الضغط على الزر
+        increaseBtn.addEventListener('click', increaseNumber);
+
+        // استخدام setInterval لتغيير لون الدائرة الصغيرة كل ثانية
+        setInterval(changeSmallCircleColor, 1000);
+    </script>
+</body>
+</html>
